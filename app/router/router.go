@@ -11,4 +11,5 @@ func InitRouter(db *gorm.DB, c echo.Echo, config *config.AppConfig) {
 	Userservice := userService.New(&Userdata)
 	UserhandlerAPI := userHandler.New(&Userservice)
 
+	c.POST("/register", UserhandlerAPI.register)
 }
