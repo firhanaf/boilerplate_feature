@@ -7,6 +7,8 @@ import (
 	"strconv"
 )
 
+var JWTSecret string
+
 type AppConfig struct {
 	DBUsername string
 	DBPassword string
@@ -63,5 +65,6 @@ func ReadENV() *AppConfig {
 		app.DBName = viper.GetString("DB_NAME")
 		app.JWTSecret = viper.GetString("JWT_SECRET")
 	}
+	JWTSecret = app.JWTSecret
 	return &app
 }
