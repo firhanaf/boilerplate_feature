@@ -1,1 +1,33 @@
-local.env
+# Binaries
+*.exe
+*.out
+*.test
+
+# Output folders
+/bin/
+/build/
+/dist/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Go
+vendor/
+
+# Environment
+*.env
+.env.*  # for .env.local, .env.production, etc.
+
+# Logs
+*.log
+
+# Coverage
+coverage.out
+
+# Node/Frontend
+node_modules/
