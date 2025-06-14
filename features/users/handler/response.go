@@ -12,7 +12,11 @@ type UserResponse struct {
 	Role      string `json:"role"`
 }
 
-func UserCoretoResponse(input users.UserCore) UserResponse {
+type LoginResponse struct {
+	Token string `json:"token"`
+}
+
+func UserCoretoResponse(input *users.UserCore) UserResponse {
 	return UserResponse{
 		ID:        input.ID,
 		Username:  input.Username,

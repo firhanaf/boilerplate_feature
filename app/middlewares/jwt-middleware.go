@@ -19,7 +19,8 @@ func JWTMiddleware() echo.MiddlewareFunc {
 func CreateToken(userid string) (string, error) {
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
-	claims["userid"] = userid
+	claims["id"] = userid
+	claims["role"] = "user"
 	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
@@ -30,8 +31,12 @@ func ExtractToken(e echo.Context) (string, error) {
 	user := e.Get("user").(*jwt.Token)
 	if user.Valid {
 		claims := user.Claims.(jwt.MapClaims)
-		userid := claims["id"].(string)
-		return userid, nil
+		userId := claims["id"].(string)
+		role := claims["role"].(string)
+		if role != "user" {
+			return "", errors.New("only user can access")
+		}
+		return userId, nil
 	}
-	return "", errors.New("invalid token")
+	return "", errors.New("token invalid")
 }
