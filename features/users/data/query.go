@@ -89,16 +89,16 @@ func (repo *UserQuery) UpdateProfile(ID string, input users.UserCore) error {
 	return nil
 }
 
-func (repo *UserQuery) GetProfile(ID string) (*users.UserCore, error) {
+func (repo *UserQuery) GetProfile(ID string) (users.UserCore, error) {
 	var user User
 	tx := repo.db.First(&user, "id = ?", ID)
 	if tx.Error != nil {
-		return nil, tx.Error
+		return users.UserCore{}, tx.Error
 	}
 	if tx.RowsAffected != 1 {
-		return nil, errors.New("user not found")
+		return users.UserCore{}, errors.New("user not found")
 	}
-	result := &users.UserCore{
+	result := users.UserCore{
 		ID:        user.ID,
 		Username:  user.Username,
 		FirstName: user.FirstName,
@@ -110,14 +110,41 @@ func (repo *UserQuery) GetProfile(ID string) (*users.UserCore, error) {
 	return result, nil
 }
 
-func (repo *UserQuery) GetAllUsers() ([]users.UserCore, error) {
-	//TODO implement me
-	panic("implement me")
+func (repo *UserQuery) GetAllUsers(ID string) ([]users.UserCore, error) {
+	var user []User
+	tx := repo.db.Find(&user)
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	var userCore []users.UserCore
+	for _, v := range user {
+		userCore = append(userCore, users.UserCore{
+			ID:        v.ID,
+			Username:  v.Username,
+			FirstName: v.FirstName,
+			LastName:  v.LastName,
+			Email:     v.Email,
+			Phone:     v.Phone,
+			Role:      v.Role,
+		})
+	}
+	return userCore, nil
 }
 
 func (repo *UserQuery) DeleteAccount(ID string) error {
-	//TODO implement me
-	panic("implement me")
+	var user User
+	tx := repo.db.First(&user, "id = ?", ID)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	if tx.RowsAffected != 1 {
+		return errors.New("user not found")
+	}
+	tx = repo.db.Delete(&user)
+	if tx.Error != nil {
+		return tx.Error
+	}
+	return nil
 }
 
 func (repo *UserQuery) Register(user users.UserCore) error {

@@ -16,7 +16,7 @@ type LoginResponse struct {
 	Token string `json:"token"`
 }
 
-func UserCoretoResponse(input *users.UserCore) UserResponse {
+func UserCoretoResponse(input users.UserCore) UserResponse {
 	return UserResponse{
 		ID:        input.ID,
 		Username:  input.Username,

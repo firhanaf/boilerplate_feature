@@ -75,22 +75,28 @@ func (u UserService) UpdateProfile(ID string, input users.UserCore) error {
 	return nil
 }
 
-func (u UserService) GetProfile(ID string) (*users.UserCore, error) {
+func (u UserService) GetProfile(ID string) (users.UserCore, error) {
 	result, err := u.userData.GetProfile(ID)
+	if err != nil {
+		return users.UserCore{}, err
+	}
+	return result, nil
+}
+
+func (u UserService) GetAllUsers(ID string) ([]users.UserCore, error) {
+	result, err := u.userData.GetAllUsers(ID)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func (u UserService) GetAllUsers() ([]users.UserCore, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
 func (u UserService) DeleteAccount(ID string) error {
-	//TODO implement me
-	panic("implement me")
+	err := u.userData.DeleteAccount(ID)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func New(repo users.UserDataInterface) users.UserServiceInterface {

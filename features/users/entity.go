@@ -25,8 +25,8 @@ type UserDataInterface interface {
 	Login(Identifier string, Password string) (*UserCore, error)
 	Register(Input UserCore) error
 	UpdateProfile(ID string, Input UserCore) error
-	GetProfile(ID string) (*UserCore, error)
-	GetAllUsers() ([]UserCore, error)
+	GetProfile(ID string) (UserCore, error)
+	GetAllUsers(ID string) ([]UserCore, error)
 	DeleteAccount(ID string) error
 }
 
@@ -34,7 +34,7 @@ type UserServiceInterface interface {
 	Login(Identifier string, Password string) (string, error)
 	Register(Input UserCore) error
 	UpdateProfile(ID string, Input UserCore) error
-	GetProfile(ID string) (*UserCore, error)
-	GetAllUsers() ([]UserCore, error)
+	GetProfile(ID string) (UserCore, error)
+	GetAllUsers(ID string) ([]UserCore, error)
 	DeleteAccount(ID string) error
 }

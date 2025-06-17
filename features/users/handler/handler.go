@@ -105,6 +105,37 @@ func (handler *UserHandler) UpdateProfile(c echo.Context) error {
 	return c.JSON(http.StatusOK, helpers.WebResponse(http.StatusOK, "success update user", nil))
 }
 
+func (handler *UserHandler) DeleteProfile(c echo.Context) error {
+	userID, err := middlewares.ExtractToken(c)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, helpers.WebResponse(http.StatusUnauthorized, "unauthorized", nil))
+	}
+	errHandler := handler.userService.DeleteAccount(userID)
+	if errHandler != nil {
+		if strings.Contains(errHandler.Error(), "validation error") {
+			return c.JSON(http.StatusBadRequest, helpers.WebResponse(http.StatusBadRequest, errHandler.Error(), nil))
+		}
+	}
+	return c.JSON(http.StatusOK, helpers.WebResponse(http.StatusOK, "success delete user", nil))
+}
+
+func (handler *UserHandler) GetAllProfile(c echo.Context) error {
+	userID, err := middlewares.ExtractToken(c)
+	if err != nil {
+		return c.JSON(http.StatusUnauthorized, helpers.WebResponse(http.StatusForbidden, "unauthorized", nil))
+	}
+	result, errHandler := handler.userService.GetAllUsers(userID)
+	if errHandler != nil {
+		return c.JSON(http.StatusInternalServerError, helpers.WebResponse(http.StatusInternalServerError, "failed to get user profile", nil))
+	}
+	var userResponse []UserResponse
+	for _, v := range result {
+		userResponse = append(userResponse, UserCoretoResponse(v))
+	}
+	return c.JSON(http.StatusOK, helpers.WebResponse(http.StatusOK, "success get users", userResponse))
+
+}
+
 func New(service users.UserServiceInterface) *UserHandler {
 	return &UserHandler{
 		userService: service,
